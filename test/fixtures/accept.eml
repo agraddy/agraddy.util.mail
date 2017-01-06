@@ -1,0 +1,6 @@
+From: from@example.com
+To: accept@example.com
+Subject: Test Subject
+Date: {{date}}
+
+Test Message
