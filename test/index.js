@@ -46,6 +46,7 @@ server.listen(function() {
 	port = server.address().port;
 
 	mod.port(port);
+	mod.host('localhost');
 
 	accept();
 });
