@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "agraddy.config": "^0.2.0",
+    "agraddy.util.array.sort.object": "^0.2.0",
     "quoted-printable": "^1.0.1",
     "uuid": "^3.0.1"
   }
