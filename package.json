@@ -21,6 +21,8 @@
     "agraddy.test.tap": "^0.2.0"
   },
   "dependencies": {
-    "agraddy.config": "^0.2.0"
+    "agraddy.config": "^0.2.0",
+    "quoted-printable": "^1.0.1",
+    "uuid": "^3.0.1"
   }
 }

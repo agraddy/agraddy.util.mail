@@ -2,5 +2,8 @@ From: from@example.com
 To: accept@example.com
 Subject: Test Subject
 Date: {{date}}
+Message-Id: {{message_id}}
+Content-Transfer-Encoding: quoted-printable
 
-Test Message
+This is a test message that is long enough that the content should wrap to =
+the next line.

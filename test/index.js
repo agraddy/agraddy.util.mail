@@ -9,6 +9,7 @@ var smtp = require('agraddy.smtp.server');
 var mod = require('../');
 
 var date;
+var message_id;
 
 var server = smtp.createServer(function(req, res) {
 	var writable = new stream.Writable();
@@ -22,9 +23,11 @@ var server = smtp.createServer(function(req, res) {
 		tap.assert.equal(req.from, 'from@example.com', 'The from field should be set.');
 
 		req.pipe(writable).on('finish', function() {
+			message_id = content.match(/Message-Id: (.*)\r\n/)[1];
 			fs.readFile(path.join('fixtures', 'accept.eml'), function(err, data) {
 				data = data.toString().replace(/\r?\n/g, '\r\n');
 				data = data.replace('{{date}}', date);
+				data = data.replace('{{message_id}}', message_id);
 				// May fail from time to time if the date is a second off
 				// Consider moving date generation to when the email is sent
 				tap.assert.equal(content, data, 'The content of the email should be sent.');
@@ -55,7 +58,7 @@ function accept() {
 	// Create date sent at the same time that email is sent
 	date =  new Date().toUTCString().replace('GMT', '+0000');
 	// Eventually need to add an html argument after the text argument
-	mod('accept@example.com', 'from@example.com', 'Test Subject', 'Test Message', function(err) {
+	mod('accept@example.com', 'from@example.com', 'Test Subject', 'This is a test message that is long enough that the content should wrap to the next line.', function(err) {
 		tap.assert.equal(err, null, 'Should be equal.');
 		reject();
 	});
