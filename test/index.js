@@ -7,6 +7,7 @@ process.chdir('test');
 
 var smtp = require('agraddy.smtp.server');
 var mod = require('../');
+var config = require('agraddy.config');
 
 var date;
 var message_id;
@@ -40,6 +41,8 @@ var server = smtp.createServer(function(req, res) {
 		tap.assert.equal(req.from, 'from@example.com', 'The from field should be set.');
 
 		res.reject();
+	} else if(req.to == 'never@example.com') {
+		console.log('THIS CODE SHOULD NEVER BE REACHED if config.mail.send = false');
 	}
 });
 
@@ -54,6 +57,9 @@ server.listen(function() {
 	accept();
 });
 
+// Must set config.mail.fqdn
+// Must set config.mail.send
+
 function accept() {
 	// Create date sent at the same time that email is sent
 	date =  new Date().toUTCString().replace('GMT', '+0000');
@@ -67,9 +73,27 @@ function accept() {
 function reject() {
 	mod('reject@example.com', 'from@example.com', 'Test Subject', 'Test Message', function(err) {
 		tap.assert.equal(err.message, '550 Message rejected.', 'The email should be rejected. The error message should be the response returned by the server.');
+		noAccount();
+	});
+}
+
+function noAccount() {
+	//console.log('noAccount');
+	mod('no_account@example.com', 'from@example.com', 'Test Subject', 'Test Message', function(err) {
+		tap.assert.equal(err.message, '550 Unknown recipient', 'The email should be rejected. The error message should be the response returned by the server.');
+		turnedOff();
+	});
+}
+
+function turnedOff() {
+	mod.send(false);
+	// Eventually need to add an html argument after the text argument
+	mod('never@example.com', 'from@example.com', 'Test Subject', 'This is a test message that should never be sent but should look like it was sent because config.mail.send = false.', function(err) {
+		tap.assert.equal(err, null, 'Should be equal.');
 		end();
 	});
 }
+
 
 function end() {
 	process.exit();
