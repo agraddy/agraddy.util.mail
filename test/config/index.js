@@ -8,6 +8,7 @@ mod.smtp = {};
 
 mod.smtp.accounts = [];
 mod.smtp.accounts.push('accept@example.com');
+mod.smtp.accounts.push('dkim@example.com');
 mod.smtp.accounts.push('reject@example.com');
 mod.smtp.accounts.push('never@example.com');
 

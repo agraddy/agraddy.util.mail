@@ -1,9 +1,9 @@
+var path = require('path');
+process.chdir(path.dirname(__filename));
 var tap = require('agraddy.test.tap')(__filename);
 var fs = require('fs');
 var path = require('path');
 var stream = require('stream');
-
-process.chdir('test');
 
 var smtp = require('agraddy.smtp.server');
 var mod = require('../');
@@ -43,6 +43,14 @@ var server = smtp.createServer(function(req, res) {
 		res.reject();
 	} else if(req.to == 'never@example.com') {
 		console.log('THIS CODE SHOULD NEVER BE REACHED if config.mail.send = false');
+	} else if(req.to == 'dkim@example.com') {
+		req.pipe(writable).on('finish', function() {
+			//console.log(content);
+			//console.log(req.rawHeaders);
+			tap.assert.equal(req.rawHeaders[0], 'DKIM-Signature', 'The DKIM-Signature header should be set.');
+			res.accept();
+
+		});
 	}
 });
 
@@ -65,6 +73,16 @@ function accept() {
 	date =  new Date().toUTCString().replace('GMT', '+0000');
 	// Eventually need to add an html argument after the text argument
 	mod('accept@example.com', 'from@example.com', 'Test Subject', 'This is a test message that is long enough that the content should wrap to the next line.', function(err) {
+		tap.assert.equal(err, null, 'Should be equal.');
+		dkim();
+	});
+}
+
+function dkim() {
+	// Create date sent at the same time that email is sent
+	date =  new Date().toUTCString().replace('GMT', '+0000');
+	// Eventually need to add an html argument after the text argument
+	mod('dkim@example.com', 'from@example.com', 'Test Subject', 'This is a test message that is long enough that the content should wrap to the next line.', '', {private_key_location: './fixtures/private_key.pem', d: 'example.com', s: 'alpha', h: ['From']}, function(err) {
 		tap.assert.equal(err, null, 'Should be equal.');
 		reject();
 	});
