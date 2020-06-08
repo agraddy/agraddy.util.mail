@@ -18,13 +18,13 @@
   },
   "devDependencies": {
     "agraddy.smtp.server": "^0.5.0",
-    "agraddy.test.tap": "^0.2.0"
+    "agraddy.test.tap": "^0.9.1"
   },
   "dependencies": {
     "agraddy.config": "^0.2.0",
     "agraddy.dkim.sign": "^0.3.0",
     "agraddy.util.array.sort.object": "^0.3.0",
     "quoted-printable": "^1.0.1",
-    "uuid": "^3.0.1"
+    "uuid": "^3.4.0"
   }
 }

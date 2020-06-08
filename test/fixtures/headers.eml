@@ -1,0 +1,10 @@
+From: from@example.com
+To: headers@example.com
+Subject: Test Subject
+Reply-To: reply@example.com
+Date: {{date}}
+Message-Id: {{message_id}}
+Content-Transfer-Encoding: quoted-printable
+
+This is a test message that is long enough that the content should wrap to =
+the next line.
